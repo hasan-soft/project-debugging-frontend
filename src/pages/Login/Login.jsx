@@ -20,21 +20,29 @@ export default function Login() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            setLoading(true);
-            setError(null);
+      e.preventDefault();
+      try {
+        setLoading(true);
+        setError(null);
 
-            const res = await loginUser(form);
-            saveToken(res.data.token);
+        const res = await loginUser(form);
 
-            navigate("/");
-            window.location.reload();
-        } catch (err) {
-            setError(err.response?.data?.message || "Login failed. Please check your credentials.");
-        } finally {
-            setLoading(false);
+        
+        saveToken(res.data.token);
+        if (res.data.user) {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
         }
+
+        navigate("/");
+        window.location.reload();
+      } catch (err) {
+        setError(
+          err.response?.data?.message ||
+            "Login failed. Please check your credentials.",
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (
